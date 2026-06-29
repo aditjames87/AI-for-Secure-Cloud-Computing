@@ -1,8 +1,10 @@
+from database.db import engine, Base
+from models import User
 from fastapi import FastAPI
+from api.user import router
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import uvicorn
-
 app = FastAPI(
     title="AI for Secure Cloud Computing API",
     description="Backend API for AI-powered Secure Cloud Computing Platform",
@@ -10,6 +12,8 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
 )
+app.include_router(router)
+Base.metadata.create_all(bind=engine)
 
 # CORS Configuration
 origins = [
