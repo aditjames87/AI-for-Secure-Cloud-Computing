@@ -1,15 +1,7 @@
-import api from "../api/axios";
+import axios from "../api/axios";
+import type { CloudStatus } from "../types";
 
-export interface DashboardData {
-  active_servers: number;
-  threats_detected: number;
-  high_risk_alerts: number;
-  cpu_usage: number;
-  memory_usage: number;
-  prediction_accuracy: number;
-}
-
-export async function getDashboardData(): Promise<DashboardData> {
-  const response = await api.get("/dashboard");
+export const getCloudStatus = async (): Promise<CloudStatus> => {
+  const response = await axios.get("/cloud/");
   return response.data;
-}
+};

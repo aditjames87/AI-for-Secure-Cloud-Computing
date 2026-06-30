@@ -18,6 +18,7 @@ SessionLocal = sessionmaker(
     bind=engine
 )
 
+# SQLAlchemy Base
 Base = declarative_base()
 
 
