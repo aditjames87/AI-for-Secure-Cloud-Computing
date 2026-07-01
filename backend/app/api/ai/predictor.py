@@ -1,7 +1,7 @@
 import joblib
 from pathlib import Path
 import numpy as np
-
+  
 
 class ThreatPredictor:
     def __init__(self):
