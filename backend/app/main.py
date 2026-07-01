@@ -1,11 +1,45 @@
 from fastapi import FastAPI
-from database.db import Base, engine
-from models.user import User
-from api import user, auth, cloud, dashboard, prediction, threats, reports
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import uvicorn
+from threading import Thread
+import time
 
+from database.db import Base, engine, SessionLocal
+from services.simulator import run_simulation
+from models.user import User
+from models.server import Server
+from models.resource import CloudResource
+from models.attack import Attack
+from models.prediction import Prediction
+
+from api import (
+    user,
+    auth,
+    cloud,
+    dashboard,
+    prediction,
+    threats,
+    reports,
+    server,
+    resource,
+    ml_prediction
+)
+
+# Create database tables
+Base.metadata.create_all(bind=engine)
+
+def background_worker():
+    while True:
+        try:
+            db = SessionLocal()
+            # your logic here
+            db.close()
+        except Exception as e:
+            print("Worker error:", e)
+
+        time.sleep(5)  # every 5 seconds
+# Create FastAPI application
 app = FastAPI(
     title="AI for Secure Cloud Computing API",
     description="Backend API for AI-powered Secure Cloud Computing Platform",
@@ -14,6 +48,7 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
+# Register routers
 app.include_router(user.router)
 app.include_router(auth.router)
 app.include_router(cloud.router)
@@ -21,10 +56,13 @@ app.include_router(dashboard.router)
 app.include_router(prediction.router)
 app.include_router(threats.router)
 app.include_router(reports.router)
+app.include_router(server.router)
+app.include_router(resource.router)
+app.include_router(ml_prediction.router)
 
 # CORS Configuration
 origins = [
-    "http://localhost:5173",  # Vite Frontend
+    "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
 
@@ -52,7 +90,7 @@ async def health_check():
         "status": "UP",
         "backend": "FastAPI",
         "ai_engine": "Ready",
-        "database": "Not Connected",
+        "database": "Connected",
         "ml_models": "Not Loaded",
     }
 
@@ -66,6 +104,10 @@ async def global_exception_handler(request, exc):
             "detail": str(exc),
         },
     )
+@app.on_event("startup")
+def start_simulator():
+    thread = Thread(target=background_worker, daemon=True)
+    thread.start()
 
 
 if __name__ == "__main__":

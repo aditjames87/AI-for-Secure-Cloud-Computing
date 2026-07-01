@@ -8,17 +8,30 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  { day: "Mon", threats: 8 },
-  { day: "Tue", threats: 12 },
-  { day: "Wed", threats: 10 },
-  { day: "Thu", threats: 15 },
-  { day: "Fri", threats: 11 },
-  { day: "Sat", threats: 18 },
-  { day: "Sun", threats: 14 },
-];
+import { useEffect, useState } from "react";
+
+import {
+  getThreatHistory,
+  type ThreatHistory,
+} from "../../services/dashboardService";
 
 export default function ThreatChart() {
+  const [data, setData] = useState<ThreatHistory[]>([]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const response = await getThreatHistory();
+        console.log("Threat history data:", response);
+        setData(response);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    loadData();
+  }, []);
+
   return (
     <ResponsiveContainer width="100%" height={300}>
       <LineChart data={data}>

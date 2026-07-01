@@ -7,27 +7,70 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
+import { useEffect, useState } from "react";
 
-const data = [
-  { resource: "CPU", value: 54 },
-  { resource: "Memory", value: 68 },
-  { resource: "Storage", value: 42 },
-  { resource: "Network", value: 76 },
-];
+import {
+  getCloudUsage,
+  type CloudUsage,
+} from "../../services/dashboardService";
 
 export default function CloudUsageChart() {
+  const [data, setData] = useState<CloudUsage[]>([]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const response = await getCloudUsage();
+        setData(Array.isArray(response) ? response : []);
+      } catch (error) {
+        console.error("Cloud usage fetch failed:", error);
+        setData([]);
+      }
+    };
+
+    loadData();
+  }, []);
+
   return (
-    <ResponsiveContainer width="100%" height={300}>
-      <BarChart data={data}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="resource" />
-        <YAxis />
-        <Tooltip />
-        <Bar
-          dataKey="value"
-          fill="#2e7d32"
-        />
-      </BarChart>
-    </ResponsiveContainer>
+    // ✅ HARD FIX CONTAINER (stable width in all layouts)
+    <div
+      style={{
+        width: "100%",
+        maxWidth: "100%",
+        minWidth: 0,
+        height: 320,
+
+        // IMPORTANT: prevents flex collapse in MUI Grid/Card
+        display: "block",
+        position: "relative",
+      }}
+    >
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart
+          data={data}
+          width={500}   // fallback width (prevents collapse bugs)
+          height={300}
+          margin={{ top: 20, right: 20, left: 10, bottom: 10 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+
+          <XAxis
+            dataKey="resource"
+            tick={{ fontSize: 12 }}
+            interval={0}
+          />
+
+          <YAxis tick={{ fontSize: 12 }} />
+
+          <Tooltip />
+
+          <Bar
+            dataKey="value"
+            fill="#2e7d32"
+            radius={[6, 6, 0, 0]}
+          />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   );
 }

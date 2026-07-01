@@ -17,7 +17,7 @@ if config.config_file_name is not None:
 # add your model's MetaData object here
 # for 'autogenerate' support
 from backend.app.database.db import Base
-from backend.app.models import user, attack, prediction  # Import all models
+from backend.app.models import user, attack, prediction, cloud_resource, server # Import all models
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,

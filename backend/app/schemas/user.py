@@ -1,29 +1,57 @@
-from pydantic import BaseModel, EmailStr, ConfigDict
+from datetime import datetime
+from typing import Optional
+
+from pydantic import BaseModel, ConfigDict, EmailStr
 
 
-class UserCreate(BaseModel):
-    name: str
+# ==========================
+# User Base
+# ==========================
+class UserBase(BaseModel):
     email: EmailStr
+    full_name: Optional[str] = None
+    role: str = "user"
+    is_active: bool = True
+
+
+# ==========================
+# Create User
+# ==========================
+class UserCreate(UserBase):
     password: str
 
 
-class UserLogin(BaseModel):
-    email: EmailStr
-    password: str
+# ==========================
+# Update User
+# ==========================
+class UserUpdate(BaseModel):
+    email: Optional[EmailStr] = None
+    full_name: Optional[str] = None
+    password: Optional[str] = None
+    role: Optional[str] = None
+    is_active: Optional[bool] = None
 
 
-class UserResponse(BaseModel):
+# ==========================
+# Response Model
+# ==========================
+class UserResponse(UserBase):
     id: int
-    name: str
-    email: EmailStr
+    created_at: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
 
+# ==========================
+# Login Token
+# ==========================
 class Token(BaseModel):
     access_token: str
-    token_type: str
+    token_type: str = "bearer"
 
 
+# ==========================
+# Token Data
+# ==========================
 class TokenData(BaseModel):
-    email: EmailStr | None = None
+    email: Optional[str] = None
