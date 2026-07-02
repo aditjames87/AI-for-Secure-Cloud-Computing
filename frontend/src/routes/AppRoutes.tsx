@@ -6,7 +6,8 @@ import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
 
 import Dashboard from "../pages/Dashboard/Dashboard";
-import ThreatDetection from "../pages/Threats/ThreatDetection";
+import ServerManagement from "../pages/ServerManagement";
+import ThreatManagement from "../pages/ThreatManagement";
 import Prediction from "../pages/Predictions/Prediction";
 import CloudMonitoring from "../pages/Cloud/CloudMonitoring";
 import Reports from "../pages/Reports/Reports";
@@ -31,7 +32,8 @@ export default function AppRoutes() {
         }
       >
         <Route index element={<Dashboard />} />
-        <Route path="threats" element={<ThreatDetection />} />
+        <Route path="servers" element={<ServerManagement />} />
+        <Route path="threats" element={<ThreatManagement />} />
         <Route path="prediction" element={<Prediction />} />
         <Route path="cloud" element={<CloudMonitoring />} />
         <Route path="reports" element={<Reports />} />

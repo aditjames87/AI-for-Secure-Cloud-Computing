@@ -55,7 +55,7 @@ def create_user(
 # ==========================================
 # Current Logged-in User
 # ==========================================
-@router.get("/me", response_model=UserResponse)
+@router.get("/me", response_model=UserResponse) # This endpoint is distinct from the mock one in the context
 def get_current_logged_user(
     current_user: User = Depends(get_current_user),
 ):
