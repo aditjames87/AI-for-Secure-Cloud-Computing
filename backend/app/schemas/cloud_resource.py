@@ -20,5 +20,12 @@ class CloudResource(CloudResourceBase):
     id: int
     created_at: datetime
 
-    class Config:
-        orm_mode = True
+    class UserResponse(BaseModel):
+        id: int
+        username: str
+        email: str
+
+        class Config:
+            orm_mode = True
+
+    model_config = ConfigDict(from_attributes=True)
