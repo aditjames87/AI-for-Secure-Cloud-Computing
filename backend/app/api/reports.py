@@ -3,10 +3,10 @@ from sqlalchemy.orm import Session
 from typing import Optional, List
 from datetime import datetime, date
 
-from database.db import get_db
-from models.prediction import Prediction
-from models.attack import Attack
-from schemas.report import ReportItem, ReportResponse
+from app.database.db import get_db
+from app.models.prediction import Prediction
+from app.models.attack import Attack
+from app.schemas.report import ReportItem, ReportResponse
 
 router = APIRouter(
     prefix="/reports",

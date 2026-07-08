@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 
-from database.db import get_db
-from models.cloud_resource import CloudResource
-from schemas.cloud_resource import (
+from app.database.db import get_db
+from app.models.cloud_resource import CloudResource
+from app.schemas.cloud_resource import (
     CloudResourceCreate,
     CloudResourceUpdate,
     CloudResource as CloudResourceSchema,

@@ -1,38 +1,28 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Box } from '@mui/material';
-import NotificationPanel from '../components/NotificationPanel';
+import { Box, Toolbar } from "@mui/material";
+import { Outlet } from "react-router-dom";
 
-const DashboardLayout: React.FC = () => {
+import Navbar from "../components/layout/Navbar";
+import Sidebar from "../components/layout/Sidebar";
+
+export default function DashboardLayout() {
   return (
-    <Box sx={{ display: 'flex' }}>
-      {/* This is a simplified layout. A real app would have a sidebar, etc. */}
-      <AppBar
-        position="fixed"
-        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-      >
-        <Toolbar>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            AI for Secure Cloud Computing
-          </Typography>
-          
-          <NotificationPanel />
+    <Box sx={{ display: "flex" }}>
+      <Sidebar />
 
-        </Toolbar>
-      </AppBar>
       <Box
-        component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
-          width: '100%',
+          minHeight: "100vh",
         }}
       >
-        <Toolbar /> {/* Spacer for the AppBar */}
-        <Outlet />
+        <Navbar />
+
+        <Toolbar />
+
+        <Box sx={{ p: 3 }}>
+          <Outlet />
+        </Box>
       </Box>
     </Box>
   );
-};
-
-export default DashboardLayout;
+}

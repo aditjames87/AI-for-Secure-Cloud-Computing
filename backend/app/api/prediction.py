@@ -3,12 +3,12 @@ from sqlalchemy.orm import Session
 from datetime import datetime
 import random
 
-from database.db import get_db
-from models.prediction import Prediction
-from models.attack import Attack
+from app.database.db import get_db
+from app.models.prediction import Prediction
+from app.models.attack import Attack
 
 router = APIRouter(
-    prefix="/prediction",
+    prefix="/api/v1/prediction",
     tags=["Prediction"]
 )
 
@@ -38,6 +38,30 @@ def fake_ml_model(data: dict):
 # -----------------------------------
 # MAIN PREDICTION ENDPOINT
 # -----------------------------------
+
+@router.post("/predict")
+def predict(payload: dict, db: Session = Depends(get_db)):
+
+    prediction, confidence = fake_ml_model(payload)
+
+    # Save prediction in DB
+    new_prediction = Prediction(
+        threat_id=payload.get("threat_id", 0),
+        prediction=prediction,
+        confidence=float(confidence),
+        created_at=datetime.utcnow()
+    )
+
+    db.add(new_prediction)
+    db.commit()
+    db.refresh(new_prediction)
+
+    return {
+        "prediction": prediction,
+        "confidence": round(confidence, 3),
+        "status": "saved"
+    }
+
 @router.post("/predict-threat")
 def predict_threat(payload: dict, db: Session = Depends(get_db)):
 
@@ -74,11 +98,10 @@ def predict_threat(payload: dict, db: Session = Depends(get_db)):
 # -----------------------------------
 # GET ALL PREDICTIONS (for chart)
 # -----------------------------------
-@router.get("/all")
-def get_all_predictions(db: Session = Depends(get_db)):
+@router.get("/")
+def get_predictions(db: Session = Depends(get_db)):
 
     data = db.query(Prediction).all()
-
     return [
         {
             "id": p.id,
@@ -88,4 +111,19 @@ def get_all_predictions(db: Session = Depends(get_db)):
             "created_at": p.created_at
         }
         for p in data
+    ]
+
+@router.get("")
+def get_all_predictions(db: Session = Depends(get_db)):
+    predictions = db.query(Prediction).order_by(Prediction.id.desc()).all()
+    
+    return [
+        {
+            "id": p.id,
+            "threat_id": p.threat_id,
+            "prediction": p.prediction,
+            "confidence": p.confidence,
+            "created_at": p.created_at
+        }
+        for p in predictions
     ]

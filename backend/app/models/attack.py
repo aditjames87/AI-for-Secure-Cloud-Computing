@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
-from database.db import Base
+from app.database.db import Base
 import datetime
 
 class Attack(Base):

@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime
-from database.db import Base
+from app.database.db import Base
 
 
 class Server(Base):

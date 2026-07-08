@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
 from sqlalchemy.sql import func
-from database.db import Base
+from app.database.db import Base
 
 
 class Prediction(Base):

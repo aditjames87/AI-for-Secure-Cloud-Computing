@@ -2,8 +2,8 @@ import random
 import time
 from sqlalchemy.orm import Session
 
-from models.server import Server
-from models.attack import Attack
+from app.models.server import Server
+from app.models.attack import Attack
 
 
 def simulate_server_load(db: Session):

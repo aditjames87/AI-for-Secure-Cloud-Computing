@@ -2,11 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException, Body
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
-from database.db import get_db
-from models.attack import Attack
-from models.prediction import Prediction
-from schemas.prediction import PredictionRequest, PredictionResponse
-from api.ai.predictor import ThreatPredictor
+from app.database.db import get_db
+from app.models.attack import Attack
+from app.models.prediction import Prediction
+from app.schemas.prediction import PredictionRequest, PredictionResponse
+from app.api.ai.predictor import ThreatPredictor
 
 router = APIRouter(
     prefix="/ml",

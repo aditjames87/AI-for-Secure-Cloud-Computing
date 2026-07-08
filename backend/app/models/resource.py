@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, Float, ForeignKey, DateTime
 from sqlalchemy.sql import func
-from database.db import Base
+from app.database.db import Base
 
 
 class CloudResource(Base):

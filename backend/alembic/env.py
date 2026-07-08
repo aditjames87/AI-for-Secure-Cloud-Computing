@@ -24,9 +24,13 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-DATABASE_URL = "postgresql://postgres:postgres@localhost/ai_secure_cloud"
-import sys
-print(f"DATABASE_URL from env.py: {DATABASE_URL}", file=sys.stderr)
+load_dotenv()
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost/ai_secure_cloud")
+
+# The following print statement is for debugging purposes during migration.
+# It can be removed in production.
+# import sys
+# print(f"DATABASE_URL from env.py: {DATABASE_URL}", file=sys.stderr)
 config.set_main_option("sqlalchemy.url", DATABASE_URL)
 
 def run_migrations_offline() -> None:

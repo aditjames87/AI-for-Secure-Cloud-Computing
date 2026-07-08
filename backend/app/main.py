@@ -5,15 +5,9 @@ import uvicorn
 from threading import Thread
 import time
 
-from database.db import Base, engine, SessionLocal
-from services.simulator import run_simulation
-from models.user import User
-from models.server import Server
-from models.resource import CloudResource
-from models.attack import Attack
-from models.prediction import Prediction
-
-from api import (
+from app.database.db import Base, engine, SessionLocal
+from app.services.simulator import run_simulation
+from app.api import (
     user,
     auth,
     cloud,
@@ -23,6 +17,7 @@ from api import (
     reports,
     server,
     resource,
+    notifications,
     ml_prediction
 )
 
@@ -33,12 +28,12 @@ def background_worker():
     while True:
         try:
             db = SessionLocal()
-            # your logic here
+            print("Running background simulation...")
+            run_simulation(db)
             db.close()
         except Exception as e:
-            print("Worker error:", e)
-
-        time.sleep(5)  # every 5 seconds
+            print(f"An error occurred in the background worker: {e}")
+        time.sleep(60)  # Run simulation every 60 seconds
 # Create FastAPI application
 app = FastAPI(
     title="AI for Secure Cloud Computing API",
@@ -59,16 +54,12 @@ app.include_router(reports.router)
 app.include_router(server.router)
 app.include_router(resource.router)
 app.include_router(ml_prediction.router)
-
+app.include_router(notifications.router)
 # CORS Configuration
-origins = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -104,11 +95,11 @@ async def global_exception_handler(request, exc):
             "detail": str(exc),
         },
     )
+
 @app.on_event("startup")
-def start_simulator():
+async def startup_event():
     thread = Thread(target=background_worker, daemon=True)
     thread.start()
-
 
 if __name__ == "__main__":
     uvicorn.run(

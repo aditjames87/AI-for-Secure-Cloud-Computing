@@ -2,11 +2,11 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
-from database.db import get_db
-from models.prediction import Prediction
-from models.server import Server
-from models.attack import Attack
-from models.resource import CloudResource
+from app.database.db import get_db
+from app.models.prediction import Prediction
+from app.models.server import Server
+from app.models.attack import Attack
+from app.models.resource import CloudResource
 
 router = APIRouter(
     prefix="/dashboard",

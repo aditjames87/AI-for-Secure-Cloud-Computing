@@ -2,11 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 import random
 
-from database.db import get_db
+from app.database.db import get_db
 
-from models.server import Server
+from app.models.server import Server
 
-from schemas.server import (
+from app.schemas.server import (
     ServerCreate,
     ServerUpdate,
     ServerResponse,

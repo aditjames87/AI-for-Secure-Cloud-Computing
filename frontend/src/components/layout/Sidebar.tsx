@@ -1,5 +1,14 @@
-import { Drawer, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
+import {
+  Drawer,
+  Toolbar,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+} from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
+
+const drawerWidth = 240;
 
 const menu = [
   { text: "Dashboard", path: "/" },
@@ -15,7 +24,19 @@ export default function Sidebar() {
   const location = useLocation();
 
   return (
-    <Drawer variant="permanent" sx={{ width: 240 }}>
+    <Drawer
+      variant="permanent"
+      sx={{
+        width: drawerWidth,
+        flexShrink: 0,
+        "& .MuiDrawer-paper": {
+          width: drawerWidth,
+          boxSizing: "border-box",
+        },
+      }}
+    >
+      <Toolbar />
+
       <List>
         {menu.map((item) => (
           <ListItem key={item.path} disablePadding>

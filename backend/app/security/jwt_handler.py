@@ -7,7 +7,7 @@ from jose import JWTError, jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 
-from schemas.user import TokenData
+from app.schemas.user import TokenData
 
 # ==========================
 # Load Environment Variables

@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.sql import func
-from database.db import Base
+from app.database.db import Base
 
 class CloudResource(Base):
     __tablename__ = "cloud_resources"
