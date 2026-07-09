@@ -19,18 +19,17 @@ export default function ThreatChart() {
   const [data, setData] = useState<ThreatHistory[]>([]);
 
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const response = await getThreatHistory();
-        console.log("Threat history data:", response);
-        setData(response);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  const loadData = async () => {
+    const response = await getThreatHistory();
+    setData(response);
+  };
 
-    loadData();
-  }, []);
+  loadData();
+
+  const interval = setInterval(loadData, 1000);
+
+  return () => clearInterval(interval);
+}, []);
 
   return (
     <ResponsiveContainer width="100%" height={300}>

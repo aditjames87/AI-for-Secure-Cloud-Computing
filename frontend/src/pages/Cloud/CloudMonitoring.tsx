@@ -179,7 +179,7 @@ export default function CloudMonitoring() {
                   <Chip
                     label={server.status}
                     color={
-                      server.status === "Online"
+                      server.status === "active"
                         ? "success"
                         : "error"
                     }

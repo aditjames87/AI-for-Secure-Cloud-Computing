@@ -1,0 +1,113 @@
+Folder PATH listing for volume Drive
+Volume serial number is 00000247 B676:3929
+F:\PERSONAL\GITHUB PRACTICE\AI-FOR-SECURE-CLOUD-COMPUTING\FRONTEND\SRC
+¦   App.css
+¦   App.tsx
+¦   index.css
+¦   main.tsx
+¦   reports.py
+¦   
++---api
+¦       axios.ts
+¦       
++---assets
+¦       hero.png
+¦       react.svg
+¦       vite.svg
+¦       
++---components
+¦   ¦   CloudResources.js
+¦   ¦   DeleteConfirmationModal.tsx
+¦   ¦   NotificationPanel.tsx
+¦   ¦   Reports.js
+¦   ¦   ResourceProgressBar.tsx
+¦   ¦   ServerForm.tsx
+¦   ¦   servers.py
+¦   ¦   StatCard.tsx
+¦   ¦   TableSkeleton.tsx
+¦   ¦   ThreatDetailModal.tsx
+¦   ¦   users.py
+¦   ¦   
+¦   +---charts
+¦   ¦       CloudUsageChart.tsx
+¦   ¦       PredictionChart.tsx
+¦   ¦       ThreatChart.tsx
+¦   ¦       
+¦   +---common
+¦   ¦       Loader.tsx
+¦   ¦       ProtectedRoute.tsx
+¦   ¦       
+¦   +---layout
+¦           Footer.tsx
+¦           Navbar.tsx
+¦           Sidebar.tsx
+¦           
++---context
+¦       api.py
+¦       AuthContext.tsx
+¦       ThemeContext.tsx
+¦       
++---hooks
+¦       useAuth.ts
+¦       
++---layouts
+¦       DashboardLayout.tsx
+¦       
++---pages
+¦   ¦   Dashboard.tsx
+¦   ¦   NotFound.tsx
+¦   ¦   ServerManagement.tsx
+¦   ¦   ThreatManagement.tsx
+¦   ¦   
+¦   +---Auth
+¦   ¦       Login.tsx
+¦   ¦       Register.tsx
+¦   ¦       
+¦   +---Cloud
+¦   ¦       CloudMonitoring.tsx
+¦   ¦       
+¦   +---Dashboard
+¦   ¦       Dashboard.tsx
+¦   ¦       
+¦   +---Predictions
+¦   ¦       Prediction.tsx
+¦   ¦       
+¦   +---Profile
+¦   ¦       Profile.tsx
+¦   ¦       
+¦   +---Reports
+¦   ¦       Reports.tsx
+¦   ¦       
+¦   +---Settings
+¦   ¦       Settings.tsx
+¦   ¦       
+¦   +---Threats
+¦           ThreatDetection.tsx
+¦           
++---routes
+¦       AppRoutes.tsx
+¦       predictions.py
+¦       
++---services
+¦       api.ts
+¦       authService.ts
+¦       cloudService.ts
+¦       dashboardService.ts
+¦       predictionService.ts
+¦       reportService.ts
+¦       serviceService.ts
+¦       threatService.ts
+¦       
++---styles
+¦       global.css
+¦       
++---theme
+¦       theme.ts
+¦       
++---types
+¦       index.ts
+¦       threat.ts
+¦       
++---utils
+        helpers.ts
+        

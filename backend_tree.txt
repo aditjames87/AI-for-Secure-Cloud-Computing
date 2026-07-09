@@ -1,0 +1,149 @@
+Folder PATH listing for volume Drive
+Volume serial number is 00000253 B676:3929
+F:\PERSONAL\GITHUB PRACTICE\AI-FOR-SECURE-CLOUD-COMPUTING\BACKEND
++---alembic
+¦   ¦   auth.py
+¦   ¦   config.py
+¦   ¦   env.py
+¦   ¦   README
+¦   ¦   script.py.mako
+¦   ¦   
+¦   +---versions
+¦   ¦   ¦   de6ec7e096a6_initial_migration.py
+¦   ¦   ¦   
+¦   ¦   +---__pycache__
+¦   ¦           de6ec7e096a6_initial_migration.cpython-312.pyc
+¦   ¦           
+¦   +---__pycache__
+¦           env.cpython-312.pyc
+¦           
++---app
+    ¦   .env
+    ¦   error.log
+    ¦   main.py
+    ¦   __init__.py
+    ¦   
+    +---api
+    ¦   ¦   auth.py
+    ¦   ¦   cloud.py
+    ¦   ¦   dashboard.py
+    ¦   ¦   ml_prediction.py
+    ¦   ¦   notifications.py
+    ¦   ¦   prediction.py
+    ¦   ¦   reports.py
+    ¦   ¦   resource.py
+    ¦   ¦   resources.py
+    ¦   ¦   server.py
+    ¦   ¦   threats.py
+    ¦   ¦   user.py
+    ¦   ¦   users.py
+    ¦   ¦   __init__.py
+    ¦   ¦   
+    ¦   +---ai
+    ¦   ¦   ¦   predictor.py
+    ¦   ¦   ¦   threat_model.pkl
+    ¦   ¦   ¦   training_data.csv
+    ¦   ¦   ¦   train_model.py
+    ¦   ¦   ¦   __init__.py
+    ¦   ¦   ¦   
+    ¦   ¦   +---__pycache__
+    ¦   ¦           predictor.cpython-312.pyc
+    ¦   ¦           __init__.cpython-312.pyc
+    ¦   ¦           
+    ¦   +---__pycache__
+    ¦           auth.cpython-312.pyc
+    ¦           cloud.cpython-312.pyc
+    ¦           dashboard.cpython-312.pyc
+    ¦           ml_prediction.cpython-312.pyc
+    ¦           notifications.cpython-312.pyc
+    ¦           prediction.cpython-312.pyc
+    ¦           reports.cpython-312.pyc
+    ¦           resource.cpython-312.pyc
+    ¦           server.cpython-312.pyc
+    ¦           threats.cpython-312.pyc
+    ¦           user.cpython-312.pyc
+    ¦           __init__.cpython-312.pyc
+    ¦           
+    +---database
+    ¦   ¦   db.py
+    ¦   ¦   
+    ¦   +---__pycache__
+    ¦           db.cpython-312.pyc
+    ¦           
+    +---ml
+    ¦       model.py
+    ¦       predict.py
+    ¦       preprocessing.py
+    ¦       train_model.py
+    ¦       __init__.py
+    ¦       
+    +---models
+    ¦   ¦   attack.py
+    ¦   ¦   cloud_resource.py
+    ¦   ¦   prediction.py
+    ¦   ¦   resource.py
+    ¦   ¦   server.py
+    ¦   ¦   user.py
+    ¦   ¦   __init__.py
+    ¦   ¦   
+    ¦   +---__pycache__
+    ¦           attack.cpython-312.pyc
+    ¦           prediction.cpython-312.pyc
+    ¦           resource.cpython-312.pyc
+    ¦           server.cpython-312.pyc
+    ¦           user.cpython-312.pyc
+    ¦           __init__.cpython-312.pyc
+    ¦           
+    +---schemas
+    ¦   ¦   api.py
+    ¦   ¦   cloud_resource.py
+    ¦   ¦   dashboard.py
+    ¦   ¦   notification.py
+    ¦   ¦   notifications.py
+    ¦   ¦   prediction.py
+    ¦   ¦   report.py
+    ¦   ¦   resource.py
+    ¦   ¦   server.py
+    ¦   ¦   servers.py
+    ¦   ¦   threat.py
+    ¦   ¦   threats.py
+    ¦   ¦   user.py
+    ¦   ¦   users.py
+    ¦   ¦   __init__.py
+    ¦   ¦   
+    ¦   +---__pycache__
+    ¦           prediction.cpython-312.pyc
+    ¦           report.cpython-312.pyc
+    ¦           server.cpython-312.pyc
+    ¦           threat.cpython-312.pyc
+    ¦           user.cpython-312.pyc
+    ¦           __init__.cpython-312.pyc
+    ¦           
+    +---security
+    ¦   ¦   jwt_handler.py
+    ¦   ¦   password.py
+    ¦   ¦   __init__.py
+    ¦   ¦   
+    ¦   +---__pycache__
+    ¦           jwt_handler.cpython-312.pyc
+    ¦           password.cpython-312.pyc
+    ¦           __init__.cpython-312.pyc
+    ¦           
+    +---services
+    ¦   ¦   cloud_monitor.py
+    ¦   ¦   logger.py
+    ¦   ¦   notification.py
+    ¦   ¦   simulator.py
+    ¦   ¦   __init__.py
+    ¦   ¦   
+    ¦   +---__pycache__
+    ¦           simulator.cpython-312.pyc
+    ¦           __init__.cpython-312.pyc
+    ¦           
+    +---utils
+    ¦       __init__.py
+    ¦       
+    +---__pycache__
+            main.cpython-312.pyc
+            __init__.cpython-312.pyc
+            

@@ -4,7 +4,8 @@ from fastapi.responses import JSONResponse
 import uvicorn
 from threading import Thread
 import time
-
+from contextlib import asynccontextmanager
+from app.services.cloud_monitor import cloud_monitor
 from app.database.db import Base, engine, SessionLocal
 from app.services.simulator import run_simulation
 from app.api import (
@@ -24,6 +25,9 @@ from app.api import (
 # Create database tables
 Base.metadata.create_all(bind=engine)
 
+SIMULATION_INTERVAL = 5  # Run simulation every 1 seconds
+
+
 def background_worker():
     while True:
         try:
@@ -33,15 +37,26 @@ def background_worker():
             db.close()
         except Exception as e:
             print(f"An error occurred in the background worker: {e}")
-        time.sleep(60)  # Run simulation every 60 seconds
+        time.sleep(SIMULTAION_INTERVAL)  # Run simulation every 60 seconds
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("Starting Cloud Monitor...")
+    cloud_monitor.start()
+    yield
+    print("Stopping Cloud Monitor...")
+    cloud_monitor.stop()        
+        
+        
 # Create FastAPI application
 app = FastAPI(
     title="AI for Secure Cloud Computing API",
     description="Backend API for AI-powered Secure Cloud Computing Platform",
+    lifespan=lifespan,
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
 )
+
 
 # Register routers
 app.include_router(user.router)

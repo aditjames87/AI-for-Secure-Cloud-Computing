@@ -12,35 +12,36 @@ import {
 
 export default function Dashboard() {
   const [dashboard, setDashboard] = useState<DashboardData | null>(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+
   useEffect(() => {
-    const loadDashboard = async () => {
-      try {
-        setLoading(true);
-        const data = await getDashboardData();
+  const loadDashboard = async () => {
+    try {
+      const data = await getDashboardData();
+      setDashboard(data);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load dashboard data");
+      setDashboard(null);
+      if (!dashboard) {
+  return (
+    <Box sx={{ p: 4 }}>
+      <Typography>Loading dashboard...</Typography>
+    </Box>
+  );
+}
+    }
+  };
+  // Initial load
+  loadDashboard();
 
-        console.log("Dashboard Response:", data);
-        setDashboard(data);
-      } catch (err) {
-        console.error("Failed to load dashboard:", err);
-        setError("Unable to load dashboard data.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Refresh every second
+  const interval = setInterval(loadDashboard, 1000);
 
-    loadDashboard();
-  }, []);
+  return () => clearInterval(interval);
+}, []);
 
-  if (loading) {
-    return (
-      <Box sx={{ p: 4 }}>
-        <Typography>Loading dashboard...</Typography>
-      </Box>
-    );
-  }
 
   if (error) {
     return (
@@ -51,23 +52,47 @@ export default function Dashboard() {
   }
 
   const cards = [
-    {
-      title: "Active Servers",
-      value: dashboard?.active_servers ?? 0,
-    },
-    {
-      title: "Threats Detected",
-      value: dashboard?.threats_detected ?? 0,
-    },
-    {
-      title: "CPU Usage",
-      value: `${dashboard?.cpu_usage ?? 0}%`,
-    },
-    {
-      title: "AI Accuracy",
-      value: `${dashboard?.prediction_accuracy ?? 0}%`,
-    },
-  ];
+  {
+    title: "Total Servers",
+    value: dashboard?.total_servers ?? 0,
+  },
+  {
+    title: "Active Servers",
+    value: dashboard?.active_servers ?? 0,
+  },
+  {
+    title: "Offline Servers",
+    value: dashboard?.offline_servers ?? 0,
+  },
+  {
+    title: "Threats Detected",
+    value: dashboard?.total_threats ?? 0,
+  },
+  {
+    title: "High Risk Alerts",
+    value: dashboard?.high_risk_alerts ?? 0,
+  },
+  {
+    title: "CPU Usage",
+    value: `${dashboard?.cpu_usage ?? 0}%`,
+  },
+  {
+    title: "Memory Usage",
+    value: `${dashboard?.memory_usage ?? 0}%`,
+  },
+  {
+    title: "Storage Usage",
+    value: `${dashboard?.storage_usage ?? 0}%`,
+  },
+  {
+    title: "Network Usage",
+    value: `${dashboard?.network_usage ?? 0}%`,
+  },
+  {
+    title: "AI Accuracy",
+    value: `${dashboard?.prediction_accuracy ?? 0}%`,
+  },
+];
 
   return (
     <Box sx={{ p: 3 }}>
@@ -79,41 +104,65 @@ export default function Dashboard() {
         Intelligent Cloud Security Monitoring Dashboard
       </Typography>
 
+      
       {/* ================= KPI CARDS ================= */}
-      <Grid container spacing={3}>
-        {cards.map((card) => (
-          <Grid item xs={12} sm={6} md={3} key={card.title}>
-            <Paper
-              elevation={3}
-              sx={{
-                p: 3,
-                borderRadius: 3,
-                textAlign: "center",
-                height: 170,
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                minWidth: 0,
-              }}
-            >
-              <Typography variant="h6" color="text.secondary">
-                {card.title}
-              </Typography>
+         
 
-              <Typography
-                variant="h4"
-                sx={{
-                  mt: 2,
-                  fontWeight: 700,
-                  color: "primary.main",
-                }}
-              >
-                {card.value}
-              </Typography>
-            </Paper>
-          </Grid>
-        ))}
-      </Grid>
+      <Box sx={{
+    display: "grid",
+    gridTemplateColumns: {
+      xs: "1fr",
+      sm: "repeat(2, 1fr)",
+      md: "repeat(3, 1fr)",
+      lg: "repeat(5, 1fr)",
+    },
+    gap: 3,
+    mb: 3,
+  }}
+>
+  {cards.map((card) => (
+    <Paper
+      key={card.title}
+      elevation={3}
+      sx={{
+        borderRadius: 3,
+        p: 2.5,
+        height: 120,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        transition: "0.25s",
+        "&:hover": {
+          transform: "translateY(-4px)",
+          boxShadow: 6,
+        },
+      }}
+    >
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        sx={{
+          fontWeight: 600,
+          textAlign: "center",
+        }}
+      >
+        {card.title}
+      </Typography>
+
+      <Typography
+        variant="h4"
+        sx={{
+          mt: 1,
+          fontWeight: "bold",
+          color: "primary.main",
+        }}
+      >
+        {card.value}
+      </Typography>
+    </Paper>
+  ))}
+</Box>
 
       {/* ================= CHART ROW 1 ================= */}
       <Grid container spacing={3} sx={{ mt: 2 }}>
@@ -138,16 +187,40 @@ export default function Dashboard() {
 
       {/* ================= CHART ROW 2 ================= */}
       <Grid container spacing={3} sx={{ mt: 2 }}>
-        <Grid item xs={12}>
-          <Paper sx={{ p: 3, minWidth: 0, overflow: "hidden" }}>
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              AI Prediction Distribution
-            </Typography>
+  <Grid item xs={12} md={6}>
+    <Paper
+      sx={{
+        p: 3,
+        height: 350,
+        minWidth: 0,
+        overflow: "hidden",
+      }}
+    >
+      <Typography variant="h6" sx={{ mb: 2 }}>
+        AI Prediction Distribution
+      </Typography>
 
-            <PredictionChart />
-          </Paper>
-        </Grid>
-      </Grid>
+      <PredictionChart />
+    </Paper>
+  </Grid>
+
+  <Grid item xs={12} md={6}>
+    <Paper
+      sx={{
+        p: 3,
+        height: 350,
+        minWidth: 0,
+        overflow: "hidden",
+      }}
+    >
+      <Typography variant="h6" sx={{ mb: 2 }}>
+        Threat Severity
+      </Typography>
+
+      {/* Add another chart here later */}
+    </Paper>
+  </Grid>
+</Grid>
     </Box>
   );
 }

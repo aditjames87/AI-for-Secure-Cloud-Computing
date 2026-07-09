@@ -21,10 +21,20 @@ def get_dashboard(db: Session = Depends(get_db)):
 
     total_servers = db.query(Server).count()
 
-    avg_cpu = db.query(func.avg(Server.cpu_usage)).scalar() or 0
-    avg_memory = db.query(func.avg(Server.memory_usage)).scalar() or 0
+    active_servers = db.query(Server).filter(
+        Server.status == "active"
+    ).count()
+
+    offline_servers = db.query(Server).filter(
+        Server.status == "offline"
+    ).count()
 
     total_threats = db.query(Attack).count()
+
+    avg_cpu = db.query(func.avg(Server.cpu_usage)).scalar() or 0
+    avg_memory = db.query(func.avg(Server.memory_usage)).scalar() or 0
+    avg_storage = db.query(func.avg(Server.storage_usage)).scalar() or 0
+    avg_network = db.query(func.avg(Server.network_usage)).scalar() or 0
 
     high_risk = (
         db.query(Prediction)
@@ -32,21 +42,29 @@ def get_dashboard(db: Session = Depends(get_db)):
         .count()
     )
 
-    # FIX: avoid magic number, compute from predictions if possible
-    total_predictions = db.query(Prediction).count()
+    print("Total Servers:", total_servers)
+    print("Active Servers:", active_servers)
+    print("Offline Servers:", offline_servers)
+
+    servers = db.query(Server).all()
+
+    for server in servers:
+        print(server.server_name, server.status)
 
     return {
-        "active_servers": total_servers,
-        "threats_detected": total_threats,
-        "high_risk_alerts": high_risk,
-        "total_predictions": total_predictions,
+        "total_servers": total_servers,
+        "active_servers": active_servers,
+        "offline_servers": offline_servers,
+        "total_threats": total_threats,
         "cpu_usage": round(avg_cpu, 2),
         "memory_usage": round(avg_memory, 2),
-
-        # temporary placeholder (replace later with ML model accuracy)
-        "prediction_accuracy": 97
+        "storage_usage": round(avg_storage, 2),
+        "network_usage": round(avg_network, 2),
+        "prediction_accuracy": 97,
+        "high_risk_alerts": high_risk,
     }
-
+        
+        
 
 # ==========================
 # Threat History Chart

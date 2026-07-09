@@ -1,12 +1,16 @@
 import api from "../api/axios";
 
 export interface DashboardData {
-  active_servers: number;
-  threats_detected: number;
-  high_risk_alerts: number;
-  cpu_usage: number;
-  memory_usage: number;
-  prediction_accuracy: number;
+    total_servers: number;
+    active_servers: number;
+    offline_servers: number;
+    total_threats: number;
+    high_risk_alerts: number;
+    cpu_usage: number;
+    memory_usage: number;
+    storage_usage: number;
+    network_usage: number;
+    prediction_accuracy: number;
 }
 
 export interface ThreatHistory {

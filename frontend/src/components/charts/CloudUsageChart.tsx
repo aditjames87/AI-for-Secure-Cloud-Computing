@@ -18,19 +18,17 @@ export default function CloudUsageChart() {
   const [data, setData] = useState<CloudUsage[]>([]);
 
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const response = await getCloudUsage();
-        setData(Array.isArray(response) ? response : []);
-      } catch (error) {
-        console.error("Cloud usage fetch failed:", error);
-        setData([]);
-      }
-    };
+  const loadData = async () => {
+    const response = await getCloudUsage();
+    setData(response);
+  };
 
-    loadData();
-  }, []);
+  loadData();
 
+  const interval = setInterval(loadData, 1000);
+
+  return () => clearInterval(interval);
+}, []);
   return (
     // ✅ HARD FIX CONTAINER (stable width in all layouts)
     <div

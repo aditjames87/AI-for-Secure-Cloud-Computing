@@ -6,6 +6,9 @@ class ServerBase(BaseModel):
     server_name: str
     ip_address: str = Field(..., pattern=r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
     operating_system: str
+    health_status: str | None = None
+
+
 
 
 class ServerCreate(ServerBase):
@@ -16,11 +19,12 @@ class ServerUpdate(BaseModel):
     server_name: Optional[str] = None
     ip_address: Optional[str] = Field(None, pattern=r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
     operating_system: Optional[str] = None
-
+    health_status: str | None = None
 
 class ServerResponse(ServerBase):
     id: int
     model_config = ConfigDict(from_attributes=True)
+    health_status: str | None = None
 
 class Server(ServerBase):
     id: int
@@ -28,6 +32,8 @@ class Server(ServerBase):
     cpu_usage: float
     memory_usage: float
     disk_usage: float
+    health_status: str | None = None
+
 
     class Config:
         from_attributes = True # This is a mock schema for an in-memory endpoint, leaving as-is.

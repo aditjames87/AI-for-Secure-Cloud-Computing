@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Float, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, Float
+from sqlalchemy.sql import func
 from app.database.db import Base
 
 
@@ -7,15 +8,26 @@ class Server(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
-    server_name = Column(String, index=True)
-    ip_address = Column(String)
+    server_name = Column(String, nullable=False)
+
     operating_system = Column(String)
 
     cpu_usage = Column(Float)
+
     memory_usage = Column(Float)
+
     storage_usage = Column(Float)
+
     network_usage = Column(Float)
 
-    status = Column(String)
+    ip_address = Column(String)
 
-    created_at = Column(DateTime)
+    status = Column(String, default="active")
+    
+    health_status = Column(String, default="Normal")
+
+
+    created_at = Column(
+        DateTime,
+        server_default=func.now()
+    )
