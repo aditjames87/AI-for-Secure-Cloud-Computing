@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import ThreatChart from "../../components/charts/ThreatChart";
 import CloudUsageChart from "../../components/charts/CloudUsageChart";
 import PredictionChart from "../../components/charts/PredictionChart";
+import ThreatSeverityChart from "../../components/charts/ThreatSeverityChart";
 
 import {
   getDashboardData,
@@ -217,7 +218,7 @@ export default function Dashboard() {
         Threat Severity
       </Typography>
 
-      {/* Add another chart here later */}
+      <ThreatSeverityChart />
     </Paper>
   </Grid>
 </Grid>

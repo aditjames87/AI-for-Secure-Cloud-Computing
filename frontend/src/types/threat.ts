@@ -1,11 +1,9 @@
 export interface Threat {
   id: number;
-  server_name: string;
-  threat_type: string;
-  risk_level: string;
-  timestamp: string | null;
-  status: string;
+  attack_type: string;
   source_ip: string;
-  description: string;
-  details: Record<string, unknown>;
+  destination_ip: string;
+  severity: string;
+  status: string;
+  timestamp: string | null;
 }

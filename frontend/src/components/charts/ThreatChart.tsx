@@ -19,17 +19,23 @@ export default function ThreatChart() {
   const [data, setData] = useState<ThreatHistory[]>([]);
 
   useEffect(() => {
-  const loadData = async () => {
-    const response = await getThreatHistory();
-    setData(response);
-  };
+    const loadData = async () => {
+      try {
+        const response = await getThreatHistory();
+        setData(response);
+      } catch (error) {
+        console.error("Failed to load threat history:", error);
+      }
+    };
 
-  loadData();
+    // Initial load
+    loadData();
 
-  const interval = setInterval(loadData, 1000);
+    // Refresh every second
+    const interval = setInterval(loadData, 1000);
 
-  return () => clearInterval(interval);
-}, []);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <ResponsiveContainer width="100%" height={300}>
@@ -38,7 +44,7 @@ export default function ThreatChart() {
 
         <XAxis dataKey="day" />
 
-        <YAxis />
+        <YAxis allowDecimals={false} />
 
         <Tooltip />
 
@@ -47,6 +53,8 @@ export default function ThreatChart() {
           dataKey="threats"
           stroke="#1976d2"
           strokeWidth={3}
+          dot={{ r: 5 }}
+          activeDot={{ r: 8 }}
         />
       </LineChart>
     </ResponsiveContainer>

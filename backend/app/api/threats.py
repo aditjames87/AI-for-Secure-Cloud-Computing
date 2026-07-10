@@ -43,23 +43,20 @@ def get_threats(
     threats = query.order_by(Attack.id.desc()).all()
 
     return {
-        "total": len(threats),
-        "threats": [
-            {
-                "id": threat.id,
-                "server_name": threat.destination_ip,
-                "threat_type": threat.attack_type,
-                "risk_level": threat.severity,
-                "timestamp": threat.timestamp,
-                "status": threat.status,
-                "source_ip": threat.source_ip,
-                "description": f"{threat.attack_type} detected from {threat.source_ip}",
-                "details": {},
-            }
-            for threat in threats
-        ],
-    }
-
+    "total": len(threats),
+    "threats": [
+        {
+            "id": threat.id,
+            "attack_type": threat.attack_type,
+            "source_ip": threat.source_ip,
+            "destination_ip": threat.destination_ip,
+            "timestamp": threat.timestamp,
+            "severity": threat.severity,
+            "status": threat.status,
+        }
+        for threat in threats
+    ],
+}
 
 @router.get("/{threat_id}", response_model=ThreatResponse)
 def get_threat(

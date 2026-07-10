@@ -38,18 +38,8 @@ import dayjs from "dayjs";
 import ThreatDetailModal from "../components/ThreatDetailModal";
 import DeleteConfirmationModal from "../components/DeleteConfirmationModal";
 import TableSkeleton from "../components/TableSkeleton";
+import type { Threat } from "../types/threat";
 
-interface Threat {
-  id: number;
-  server_name: string;
-  threat_type: string;
-  risk_level: string;
-  timestamp: string | null;
-  status: string;
-  source_ip: string;
-  description: string;
-  details: Record<string, unknown>;
-}
 
 interface PaginatedThreats {
   total: number;
@@ -124,24 +114,27 @@ export default function ThreatManagement() {
     }
   };
 
-  const RiskLevelBadge = ({ risk }: { risk: string }) => {
-    const level = risk.toLowerCase();
+  const RiskLevelBadge = ({ risk }: { risk?: string }) => {
+  const level = (risk ?? "").toLowerCase();
 
-    const color =
-      level === "critical" || level === "high"
-        ? "error"
-        : level === "medium"
-        ? "warning"
-        : "default";
+  let color: "default" | "warning" | "error" | "success" = "default";
 
-    return (
-      <Chip
-        label={risk}
-        color={color}
-        size="small"
-      />
-    );
-  };
+  if (level === "critical" || level === "high") {
+    color = "error";
+  } else if (level === "medium") {
+    color = "warning";
+  } else if (level === "low") {
+    color = "success";
+  }
+
+  return (
+    <Chip
+      label={risk ?? "Unknown"}
+      color={color}
+      size="small"
+    />
+  );
+};
 
   return (
     <Box sx={{ p: 3 }}>
@@ -238,16 +231,16 @@ export default function ThreatManagement() {
                     <TableCell>{threat.id}</TableCell>
 
                     <TableCell>
-                      {threat.server_name}
+                      {threat.destination_ip}
                     </TableCell>
 
                     <TableCell>
-                      {threat.threat_type}
+                      {threat.attack_type}
                     </TableCell>
 
                     <TableCell>
                       <RiskLevelBadge
-                        risk={threat.risk_level}
+                        risk={threat.severity}
                       />
                     </TableCell>
 

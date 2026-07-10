@@ -49,3 +49,17 @@ export async function getPredictionDistribution(): Promise<
   const response = await api.get("/dashboard/prediction-distribution");
   return response.data;
 }
+
+// ==============================
+// Threat Severity
+// ==============================
+
+export interface ThreatSeverity {
+  severity: string;
+  count: number;
+}
+
+export async function getThreatSeverity(): Promise<ThreatSeverity[]> {
+  const response = await api.get("/dashboard/threat-severity");
+  return response.data;
+}

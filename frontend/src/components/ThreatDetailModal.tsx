@@ -64,17 +64,17 @@ const ThreatDetailModal: React.FC<ThreatDetailModalProps> = ({
         <Grid container spacing={2}>
           <DetailItem
             label="Server Name"
-            value={threat.server_name}
+            value={threat.destination_ip}
           />
 
           <DetailItem
             label="Threat Type"
-            value={threat.threat_type}
+            value={threat.attack_type}
           />
 
           <DetailItem
             label="Risk Level"
-            value={threat.risk_level}
+            value={threat.severity}
           />
 
           <DetailItem
@@ -100,9 +100,7 @@ const ThreatDetailModal: React.FC<ThreatDetailModalProps> = ({
               Description
             </Typography>
 
-            <Typography variant="body1">
-              {threat.description || "-"}
-            </Typography>
+            
           </Grid>
 
           <Grid item xs={12}>
@@ -129,7 +127,7 @@ const ThreatDetailModal: React.FC<ThreatDetailModalProps> = ({
                   wordBreak: "break-word",
                 }}
               >
-                {JSON.stringify(threat.details ?? {}, null, 2)}
+                
               </Box>
             </Paper>
           </Grid>
