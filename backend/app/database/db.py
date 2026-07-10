@@ -12,6 +12,10 @@ engine = create_engine(
     echo=True
 )
 
+print("=" * 50)
+print("DATABASE_URL =", DATABASE_URL)
+print("=" * 50)
+
 SessionLocal = sessionmaker(
     autoflush=False,
     autocommit=False,

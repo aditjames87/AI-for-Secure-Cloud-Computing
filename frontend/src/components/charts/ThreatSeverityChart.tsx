@@ -52,12 +52,7 @@ export default function ThreatSeverityChart() {
         height: "100%",
       }}
     >
-      <Typography
-        variant="h6"
-        sx={{ mb: 2 }}
-      >
-        Threat Severity
-      </Typography>
+      
 
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>

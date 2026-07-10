@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.models.server import Server
 from app.models.attack import Attack
-
+from app.ml.predict import generate_predictions
 
 def _generate_server_metrics(server: Server):
     """Generates and applies new random metrics for a single server."""
@@ -55,17 +55,25 @@ def simulate_server_load(db: Session):
 
 def simulate_threats(db: Session):
     """Simulates the random occurrence of a security threat."""
-    chance = random.randint(1, 10)
+    # Find a server with high CPU usage to target
+    high_load_servers = db.query(Server).filter(Server.cpu_usage > 85, Server.status == 'active').all()
 
-    # 30% chance to generate a threat (8, 9, 10)
-    if chance > 7:
+    if not high_load_servers:
+        return # No servers under high load, no attack generated
+
+    # Pick a random server from the high-load list
+    target_server = random.choice(high_load_servers)
+
+    # Add a chance-based trigger for the attack
+    if random.random() < 0.5: # 50% chance to generate an attack on a high-load server
         attack = Attack(
             attack_type=random.choice(["DDoS", "SQL Injection", "Brute Force"]),
             source_ip=f"192.168.{random.randint(1, 255)}.{random.randint(1, 255)}",
-            destination_ip="10.0.0.1",
+            destination_ip=target_server.ip_address,
             severity=random.choice(["low", "medium", "high"]),
             status="detected",
-            user_id=1
+            user_id=1, # Assuming a default user for now
+            server_id=target_server.id # Link the attack to the server
         )
         db.add(attack)
 
@@ -77,6 +85,7 @@ def run_simulation(db: Session):
     """
     simulate_server_load(db)
     simulate_threats(db)
+    generate_predictions(db)
 
     # Perform a single commit after all updates for this simulation cycle
     db.commit()

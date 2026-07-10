@@ -1,6 +1,9 @@
 from sqlalchemy import Column, Integer, Float, ForeignKey, DateTime
 from sqlalchemy.sql import func
 from app.database.db import Base
+from sqlalchemy.orm import relationship
+
+server = relationship("Server")
 
 
 class CloudResource(Base):

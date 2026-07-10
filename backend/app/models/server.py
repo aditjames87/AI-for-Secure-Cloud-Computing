@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, Float
 from sqlalchemy.sql import func
 from app.database.db import Base
-
+from sqlalchemy.orm import relationship
 
 class Server(Base):
     __tablename__ = "servers"
@@ -31,3 +31,5 @@ class Server(Base):
         DateTime,
         server_default=func.now()
     )
+    
+    attacks = relationship("Attack", back_populates="server")

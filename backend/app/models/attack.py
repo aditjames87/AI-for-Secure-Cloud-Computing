@@ -14,5 +14,7 @@ class Attack(Base):
     severity = Column(String)
     status = Column(String)
     user_id = Column(Integer, ForeignKey("users.id"))
+    server_id = Column(Integer, ForeignKey("servers.id"))
 
-    owner = relationship("User")
+    owner = relationship("User", back_populates="attacks")
+    server = relationship("Server", back_populates="attacks")
