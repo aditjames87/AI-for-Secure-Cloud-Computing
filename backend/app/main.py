@@ -7,7 +7,7 @@ import time
 from contextlib import asynccontextmanager
 from app.services.cloud_monitor import cloud_monitor
 from app.database.db import Base, engine, SessionLocal
-from app.services.simulator import run_simulation
+from app.services.metric_collector import collect_metrics
 from app.api import (
     user,
     auth,
@@ -30,10 +30,25 @@ SIMULATION_INTERVAL = 5  # Run simulation every 1 seconds
 
 def background_worker():
     while True:
+        db = None
+        try:
+            db = SessionLocal()
+            print("Collecting real system metrics...")
+            collect_metrics(db)
+        except Exception as e:
+            print(f"An error occurred in the background worker: {e}")
+        finally:
+            if db:
+                db.close()
+
+        time.sleep(SIMULATION_INTERVAL)
+    while True:
         try:
             db = SessionLocal()
             print("Running background simulation...")
-            run_simulation(db)
+            collect_metrics(db)
+            generate_predictions(db)
+            detect_threats(db)
             db.close()
         except Exception as e:
             print(f"An error occurred in the background worker: {e}")
@@ -70,6 +85,8 @@ app.include_router(server.router)
 app.include_router(resource.router)
 app.include_router(ml_prediction.router)
 app.include_router(notifications.router)
+
+
 # CORS Configuration
 
 app.add_middleware(

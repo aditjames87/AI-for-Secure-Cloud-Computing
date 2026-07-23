@@ -1,129 +1,158 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from datetime import datetime
-import random
 
 from app.database.db import get_db
 from app.models.prediction import Prediction
-from app.models.attack import Attack
 
 router = APIRouter(
     prefix="/api/v1/prediction",
     tags=["Prediction"]
 )
 
-# -----------------------------------
-# SIMPLE ML SIMULATION (replace later with real model)
-# -----------------------------------
-def fake_ml_model(data: dict):
+
+# ---------------------------------------------------------
+# GET DASHBOARD SUMMARY
+# ---------------------------------------------------------
+@router.get("/summary")
+def prediction_summary(db: Session = Depends(get_db)):
     """
-    Simulated ML model:
-    Replace this later with:
-    - sklearn model
-    - xgboost
-    - tensorflow
-    - or ollama AI
+    Returns prediction counts for dashboard KPIs.
     """
 
-    risk_score = random.random()
-
-    if risk_score > 0.7:
-        return "High Risk", risk_score
-    elif risk_score > 0.4:
-        return "Medium Risk", risk_score
-    else:
-        return "Normal", risk_score
-
-
-# -----------------------------------
-# MAIN PREDICTION ENDPOINT
-# -----------------------------------
-
-@router.post("/predict")
-def predict(payload: dict, db: Session = Depends(get_db)):
-
-    prediction, confidence = fake_ml_model(payload)
-
-    # Save prediction in DB
-    new_prediction = Prediction(
-        threat_id=payload.get("threat_id", 0),
-        prediction=prediction,
-        confidence=float(confidence),
-        created_at=datetime.utcnow()
-    )
-
-    db.add(new_prediction)
-    db.commit()
-    db.refresh(new_prediction)
-
     return {
-        "prediction": prediction,
-        "confidence": round(confidence, 3),
-        "status": "saved"
-    }
-
-@router.post("/predict-threat")
-def predict_threat(payload: dict, db: Session = Depends(get_db)):
-
-    prediction, confidence = fake_ml_model(payload)
-
-    # Save prediction in DB
-    new_prediction = Prediction(
-        threat_id=payload.get("threat_id", 0),
-        prediction=prediction,
-        confidence=float(confidence),
-        created_at=datetime.utcnow()
-    )
-
-    db.add(new_prediction)
-    db.commit()
-    db.refresh(new_prediction)
-
-    # Optional: also create attack record if threat
-    if prediction != "Normal":
-        attack = Attack(
-            severity=prediction,
-            description="AI detected anomaly",
-        )
-        db.add(attack)
-        db.commit()
-
-    return {
-        "prediction": prediction,
-        "confidence": round(confidence, 3),
-        "status": "saved"
+        "total_predictions": db.query(Prediction).count(),
+        "high_risk": db.query(Prediction)
+            .filter(Prediction.prediction == "HIGH_RISK")
+            .count(),
+        "medium_risk": db.query(Prediction)
+            .filter(Prediction.prediction == "MEDIUM_RISK")
+            .count(),
+        "low_risk": db.query(Prediction)
+            .filter(Prediction.prediction == "LOW_RISK")
+            .count(),
+        "safe": db.query(Prediction)
+            .filter(Prediction.prediction == "SAFE")
+            .count(),
     }
 
 
-# -----------------------------------
-# GET ALL PREDICTIONS (for chart)
-# -----------------------------------
+# ---------------------------------------------------------
+# GET ALL PREDICTIONS
+# ---------------------------------------------------------
 @router.get("/")
 def get_predictions(db: Session = Depends(get_db)):
+    """
+    Returns all predictions.
+    """
 
-    data = db.query(Prediction).all()
+    predictions = (
+        db.query(Prediction)
+        .order_by(Prediction.created_at.desc())
+        .all()
+    )
+
     return [
         {
             "id": p.id,
             "threat_id": p.threat_id,
             "prediction": p.prediction,
-            "confidence": p.confidence,
-            "created_at": p.created_at
-        }
-        for p in data
-    ]
-
-@router.get("")
-def get_all_predictions(db: Session = Depends(get_db)):
-    predictions = db.query(Prediction).order_by(Prediction.id.desc()).all()
-    
-    return [
-        {
-            "id": p.id,
-            "threat_id": p.threat_id,
-            "prediction": p.prediction,
-            "confidence": p.confidence,
-            "created_at": p.created_at
+            "confidence": round(float(p.confidence), 2),
+            "created_at": p.created_at,
         }
         for p in predictions
     ]
+
+
+# ---------------------------------------------------------
+# GET PREDICTIONS BY THREAT
+# ---------------------------------------------------------
+@router.get("/threat/{threat_id}")
+def get_prediction_by_threat(
+    threat_id: int,
+    db: Session = Depends(get_db),
+):
+    """
+    Returns all predictions for a specific threat.
+    """
+
+    predictions = (
+        db.query(Prediction)
+        .filter(Prediction.threat_id == threat_id)
+        .all()
+    )
+
+    return [
+        {
+            "id": p.id,
+            "threat_id": p.threat_id,
+            "prediction": p.prediction,
+            "confidence": round(float(p.confidence), 2),
+            "created_at": p.created_at,
+        }
+        for p in predictions
+    ]
+
+
+# ---------------------------------------------------------
+# GET SINGLE PREDICTION
+# ---------------------------------------------------------
+@router.get("/{prediction_id}")
+def get_prediction(
+    prediction_id: int,
+    db: Session = Depends(get_db),
+):
+    """
+    Returns a single prediction.
+    """
+
+    prediction = (
+        db.query(Prediction)
+        .filter(Prediction.id == prediction_id)
+        .first()
+    )
+
+    if prediction is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Prediction not found",
+        )
+
+    return {
+        "id": prediction.id,
+        "threat_id": prediction.threat_id,
+        "prediction": prediction.prediction,
+        "confidence": round(float(prediction.confidence), 2),
+        "created_at": prediction.created_at,
+    }
+
+
+# ---------------------------------------------------------
+# DELETE PREDICTION
+# ---------------------------------------------------------
+@router.delete("/{prediction_id}")
+def delete_prediction(
+    prediction_id: int,
+    db: Session = Depends(get_db),
+):
+    """
+    Deletes a prediction.
+    """
+
+    prediction = (
+        db.query(Prediction)
+        .filter(Prediction.id == prediction_id)
+        .first()
+    )
+
+    if prediction is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Prediction not found",
+        )
+
+    db.delete(prediction)
+    db.commit()
+
+    return {
+        "message": "Prediction deleted successfully"
+    }

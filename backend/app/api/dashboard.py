@@ -39,7 +39,7 @@ def get_dashboard(db: Session = Depends(get_db)):
 
     high_risk = (
         db.query(Prediction)
-        .filter(Prediction.prediction == "HIGH_RISK")
+        .filter(Prediction.prediction == "High Risk")
         .count()
     )
 
@@ -61,7 +61,6 @@ def get_dashboard(db: Session = Depends(get_db)):
         "memory_usage": round(avg_memory, 2),
         "storage_usage": round(avg_storage, 2),
         "network_usage": round(avg_network, 2),
-        "prediction_accuracy": 97,
         "high_risk_alerts": high_risk,
     }
         
@@ -133,7 +132,6 @@ def get_dashboard(db: Session = Depends(get_db)):
         "memory_usage": round(avg_memory, 2),
         "storage_usage": round(avg_storage, 2),
         "network_usage": round(avg_network, 2),
-        "prediction_accuracy": 97,
         "high_risk_alerts": high_risk,
     }
         
